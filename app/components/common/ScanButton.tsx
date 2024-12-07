@@ -1,13 +1,16 @@
 import { useNavigation } from '@react-navigation/core'
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import Icon from 'react-native-vector-icons/AntDesign'
 
 import { useNetwork } from '../../contexts/network'
+import { useTheme } from '../../contexts/theme'
 import { Screens, Stacks } from '../../types/navigators'
 
 const ScanButton: React.FC = () => {
   const navigation = useNavigation()
   const { assertConnectedNetwork } = useNetwork()
+  const { ColorPallet } = useTheme()
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -16,13 +19,18 @@ const ScanButton: React.FC = () => {
       alignItems: 'flex-end',
       marginTop: 'auto',
     },
-    imageContainer: {
-      width: 81,
-      height: 81,
+    iconContainer: {
+      width: 70,
+      height: 70,
+      backgroundColor: ColorPallet.brand.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 70 / 2,
+      marginRight: 10,
+      marginBottom: 10,
     },
   })
-  const navigateToconnect = e => {
-    e.preventDefault()
+  const navigateToConnect = () => {
     if (!assertConnectedNetwork()) {
       return
     }
@@ -31,8 +39,10 @@ const ScanButton: React.FC = () => {
   }
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={e => navigateToconnect(e)}>
-        <Image style={styles.imageContainer} source={require('../../assets/img/Scanbutton.png')} />
+      <TouchableOpacity onPress={navigateToConnect}>
+        <View style={styles.iconContainer}>
+          <Icon name={'scan1'} size={35} color={ColorPallet.brand.text} />
+        </View>
       </TouchableOpacity>
     </View>
   )
