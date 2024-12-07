@@ -24,6 +24,7 @@
     "@formatjs/intl-numberformat": "^8.7.0",
     "@formatjs/intl-pluralrules": "^5.2.4",
     "@formatjs/intl-relativetimeformat": "^11.2.4",
+    "@hashgraph/sdk": "^2.54.2",
     "@hyperledger/anoncreds-react-native": "0.2.2",
     "@hyperledger/aries-askar-react-native": "0.2.1",
     "@hyperledger/aries-oca": "1.0.0-alpha.130",
