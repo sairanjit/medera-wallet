@@ -11,7 +11,6 @@ import {
   MediatorPickupStrategy,
   WebDidResolver,
 } from '@adeya/ssi'
-import { PolygonDidResolver, PolygonModule } from '@ayanworks/credo-polygon-w3c-module'
 import { StackScreenProps } from '@react-navigation/stack'
 import React, { useEffect, useState } from 'react'
 import {
@@ -158,9 +157,8 @@ const ImportWalletVerify: React.FC<ImportWalletVerifyProps> = ({ navigation }) =
             mediatorInvitationUrl: Config.MEDIATOR_URL!,
             mediatorPickupStrategy: MediatorPickupStrategy.PickUpV2LiveMode,
           }),
-          polygon: new PolygonModule({}),
           dids: new DidsModule({
-            resolvers: [new PolygonDidResolver(), new IndyVdrIndyDidResolver(), new WebDidResolver()],
+            resolvers: [new IndyVdrIndyDidResolver(), new WebDidResolver()],
           }),
           cache: new CacheModule({
             cache: new SingleContextStorageLruCache({

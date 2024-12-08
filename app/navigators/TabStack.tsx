@@ -14,6 +14,7 @@ import { testIdWithKey } from '../utils/testable'
 
 import CredentialStack from './CredentialStack'
 import HomeStack from './HomeStack'
+import PaymentsStack from './PaymentsStack'
 
 const TabStack: React.FC = () => {
   const { width, height } = useWindowDimensions()
@@ -106,6 +107,30 @@ const TabStack: React.FC = () => {
             tabBarShowLabel: false,
             tabBarAccessibilityLabel: t('TabStack.Credentials'),
             tabBarTestID: testIdWithKey(t('TabStack.Credentials')),
+          }}
+        />
+        <Tab.Screen
+          name={TabStacks.PaymentsStack}
+          component={PaymentsStack}
+          options={{
+            tabBarIconStyle: styles.tabBarIcon,
+            tabBarIcon: ({ color, focused }) => (
+              <AttachTourStep index={3}>
+                <View style={{ ...TabTheme.tabBarContainerStyle, justifyContent: showLabels ? 'flex-end' : 'center' }}>
+                  <Icon name={focused ? 'bank' : 'bank-outline'} color={color} size={30} />
+                  {showLabels && (
+                    <Text
+                      style={{
+                        ...TabTheme.tabBarTextStyle,
+                        color: focused ? TabTheme.tabBarActiveTintColor : TabTheme.tabBarInactiveTintColor,
+                      }}>
+                      Payments
+                    </Text>
+                  )}
+                </View>
+              </AttachTourStep>
+            ),
+            tabBarShowLabel: false,
           }}
         />
       </Tab.Navigator>
