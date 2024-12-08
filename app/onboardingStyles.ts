@@ -12,7 +12,6 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: hp('2.5%'),
     justifyContent: 'center',
-    color: '#1F4EAD',
     paddingBottom: hp('2%'),
     fontSize: 28,
   },
@@ -49,7 +48,6 @@ export const styles = StyleSheet.create({
     flexShrink: 0,
     fontSize: hp('2.5%'),
     textAlign: 'center',
-    color: '#2289F7',
   },
   descriptionText: {
     alignSelf: 'center',

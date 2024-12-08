@@ -367,7 +367,7 @@ const Settings: React.FC<SettingsProps> = ({ navigation }) => {
           numberOfLines={1}>
           {title}
         </Text>
-        <Text style={[TextTheme.headingFour, { fontWeight: 'normal', color: ColorPallet.brand.link }]}>{value}</Text>
+        <Text style={[TextTheme.headingFour, { fontWeight: 'normal' }]}>{value}</Text>
       </TouchableOpacity>
     </ScrollView>
   )
