@@ -12,6 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/core'
 import { CommonActions } from '@react-navigation/native'
+import { HederaModule, HederaDidResolver } from 'hedera-credo-module'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet, Text, View, useWindowDimensions, Image } from 'react-native'
@@ -295,8 +296,9 @@ const Splash: React.FC = () => {
               mediatorPickupStrategy: MediatorPickupStrategy.PickUpV2LiveMode,
             }),
             dids: new DidsModule({
-              resolvers: [],
+              resolvers: [new HederaDidResolver()],
             }),
+            hedera: new HederaModule({}),
             cache: new CacheModule({
               cache: new SingleContextStorageLruCache({
                 limit: 50,

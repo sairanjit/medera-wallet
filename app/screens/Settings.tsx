@@ -218,13 +218,13 @@ const Settings: React.FC<SettingsProps> = ({ navigation }) => {
         icon: 'info',
       },
       data: [
-        {
-          title: t('Settings.TermsOfUse'),
-          accessibilityLabel: t('Settings.TermsOfUse'),
-          testID: testIdWithKey('TermsOfUse'),
-          onPress: () => navigation.getParent()?.navigate(Stacks.SettingStack, { screen: Screens.Terms }),
-          value: undefined,
-        },
+        // {
+        //   title: t('Settings.TermsOfUse'),
+        //   accessibilityLabel: t('Settings.TermsOfUse'),
+        //   testID: testIdWithKey('TermsOfUse'),
+        //   onPress: () => navigation.getParent()?.navigate(Stacks.SettingStack, { screen: Screens.Terms }),
+        //   value: undefined,
+        // },
         {
           title: t('Settings.IntroductionToTheApp'),
           accessibilityLabel: t('Settings.IntroductionToTheApp'),

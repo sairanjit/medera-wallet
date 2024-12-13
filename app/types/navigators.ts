@@ -51,6 +51,7 @@ export enum Screens {
   DataRetention = 'Data Retention',
   Explore = 'Explore',
   ListPayments = 'List Payments',
+  ConnectionInfo = 'Connection Info',
 }
 
 export enum Stacks {
@@ -118,6 +119,7 @@ export type ContactStackParams = {
   [Screens.ProofRequest]: { proofId: string }
   [Screens.ProofRequestW3C]: { proofId: string }
   [Screens.Home]: undefined
+  [Screens.ConnectionInfo]: { invitationURL: string }
 }
 
 export type ProofRequestsStackParams = {

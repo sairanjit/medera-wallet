@@ -195,7 +195,11 @@ const RootStack: React.FC = () => {
     dispatch({
       type: DispatchAction.DID_COMPLETE_TUTORIAL,
     })
-    navigation.navigate(Screens.Terms)
+    dispatch({
+      type: DispatchAction.DID_AGREE_TO_TERMS,
+    })
+    // navigation.navigate(Screens.Terms)
+    navigation.navigate(Screens.CreatePIN)
   }
 
   const onAuthenticated = (status: boolean): void => {

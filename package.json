@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@adeya/ssi": "0.0.1-alpha.30",
-    "@ayanworks/credo-polygon-w3c-module": "1.0.0",
     "@ethersproject/shims": "^5.7.0",
     "@formatjs/intl-datetimeformat": "^6.10.0",
     "@formatjs/intl-displaynames": "^6.5.0",
@@ -44,6 +43,7 @@
     "crypto-js": "^4.2.0",
     "events": "^1.1.1",
     "expo-modules-core": "^1.2.7",
+    "hedera-credo-module": "file:./hedera-credo-module-0.0.0.tgz",
     "i18next": "^23.4.1",
     "lodash.flatten": "^4.4.0",
     "lodash.shuffle": "^4.2.0",

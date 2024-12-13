@@ -53,8 +53,8 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
       alignItems: 'center',
       justifyContent: 'center',
       marginTop: 20,
-      height: 250,
-      width: 300,
+      height: 350,
+      width: '100%',
     },
     header: {
       marginTop: offset,

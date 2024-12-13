@@ -1,9 +1,6 @@
 import React from 'react'
-import { Image, ScrollView, StyleSheet, Text, View, ImageBackground } from 'react-native'
-import { SvgProps } from 'react-native-svg'
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 
-import onBoardingOrganizeEase from '../assets/img/onBoardingOrganizeease.svg'
-import onBoardingDataSafe from '../assets/img/onBoardingdatasafe.svg'
 import Button, { ButtonType } from '../components/buttons/Button'
 import { useStore } from '../contexts/store'
 import { styles } from '../onboardingStyles'
@@ -116,9 +113,7 @@ const OnboardingPages = (onTutorialCompleted: GenericFn): Array<Element> => {
     return (
       <ScrollView style={styles.container}>
         <Text style={[defaultStyle.headerText, styles.headerText]}>Welcome!</Text>
-        <ImageBackground source={require('../assets/img/onBoardingfirst.png')} style={styles.backgroundImage}>
-          <Image source={require('../assets/img/face-scan.png')} style={styles.Image} />
-        </ImageBackground>
+        <Image source={require('../assets/img/onBoardingfirst.png')} style={styles.backgroundImage} />
 
         <View style={styles.descriptionText}>
           <Text style={[styles.bodyText]}>
@@ -130,45 +125,24 @@ const OnboardingPages = (onTutorialCompleted: GenericFn): Array<Element> => {
     )
   }
 
-  const guides: Array<{
-    image: React.FC<SvgProps>
-    title: string
-    body: string
-  }> = [
-    {
-      image: onBoardingDataSafe,
-      title: 'Keep your data safe',
-      body: 'Safeguard your digital Credentials with Medera, ensuring that your data remains protected and shared with your consent only.',
-    },
-    {
-      image: onBoardingOrganizeEase,
-      title: 'Organize with ease',
-      body: 'Organize and manage your digital credentials effortlessly within Medera. Say goodbye to paper documents and embrace the convenience of an identity wallet in your hand.',
-    },
-  ]
-
-  const CreatePageWith = (image: React.FC<SvgProps>, title: string, body: string, theme: ITheme['OnboardingTheme']) => {
+  const MiddlePage = (theme: ITheme) => {
     const defaultStyle = createStyles(theme)
-    const imageDisplayOptions = {
-      fill: '',
-      height: 245,
-      width: 345,
-    }
     return (
       <ScrollView style={styles.container}>
-        <Text style={[defaultStyle.headerText, styles.headerText]}>{title}</Text>
-        <View style={styles.guideImages}>{image(imageDisplayOptions)}</View>
+        <Text style={[defaultStyle.headerText, styles.headerText]}>Keep your data safe</Text>
+        <Image source={require('../assets/img/middlepage.png')} style={styles.backgroundImage} />
+
         <View style={styles.descriptionText}>
-          <Text style={[styles.bodyText]}>{body}</Text>
+          <Text style={[styles.bodyText]}>
+            Safeguard your digital Credentials with Medera, ensuring that your data remains protected and shared with
+            your consent only.
+          </Text>
         </View>
       </ScrollView>
     )
   }
-  return [
-    StartPages(theme),
-    ...guides.map(g => CreatePageWith(g.image, g.title, g.body, theme)),
-    EndPage(onTutorialCompleted, theme),
-  ]
+
+  return [StartPages(theme), MiddlePage(theme), EndPage(onTutorialCompleted, theme)]
 }
 
 export default OnboardingPages

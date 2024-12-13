@@ -13,19 +13,10 @@ import CameraDisclosureModal from '../components/modals/CameraDisclosureModal'
 import LoadingModal from '../components/modals/LoadingModal'
 import { ToastType } from '../components/toast/BaseToast'
 import { useStore } from '../contexts/store'
-import { BifoldError, QrCodeScanError } from '../types/error'
+import { QrCodeScanError } from '../types/error'
 import { ConnectStackParams, Screens, Stacks } from '../types/navigators'
 import { PermissionContract } from '../types/permissions'
 import { useAppAgent } from '../utils/agent'
-import {
-  checkIfAlreadyConnected,
-  connectFromInvitation,
-  fetchUrlData,
-  getJson,
-  getUrl,
-  isValidUrl,
-  receiveMessageFromUrlRedirect,
-} from '../utils/helpers'
 
 export type ScanProps = StackScreenProps<ConnectStackParams>
 
@@ -41,100 +32,57 @@ const Scan: React.FC<ScanProps> = ({ navigation, route }) => {
     defaultToConnect = route.params['defaultToConnect']
   }
 
-  const handleInvitation = async (value: string): Promise<void> => {
-    try {
-      setLoading(true)
-
-      const isAlreadyConnected = await checkIfAlreadyConnected(agent, value)
-
-      if (isAlreadyConnected) {
-        setLoading(false)
-
-        Toast.show({
-          type: ToastType.Warn,
-          text1: t('Contacts.AlreadyConnected'),
-        })
-        navigation.goBack()
-        return
-      }
-
-      const { connectionRecord, outOfBandRecord } = await connectFromInvitation(agent, value)
-      setLoading(false)
-      navigation.getParent()?.navigate(Stacks.ConnectionStack, {
-        screen: Screens.Connection,
-        params: { connectionId: connectionRecord?.id, outOfBandId: outOfBandRecord.id },
-      })
-    } catch (err: unknown) {
-      try {
-        // if scanned value is json -> pass into AFJ as is
-        const json = getJson(value)
-        if (json) {
-          await agent?.receiveMessage(json)
-          setLoading(false)
-          navigation.getParent()?.navigate(Stacks.ConnectionStack, {
-            screen: Screens.Connection,
-            params: { threadId: json['@id'] },
-          })
-          return
-        }
-
-        const urlData = await fetchUrlData(value)
-        const isValidURL = isValidUrl(urlData)
-
-        if (isValidURL) {
-          const isAlreadyConnected = await checkIfAlreadyConnected(agent, urlData)
-
-          if (isAlreadyConnected) {
-            setLoading(false)
-
-            Toast.show({
-              type: ToastType.Warn,
-              text1: t('Contacts.AlreadyConnected'),
-            })
-            navigation.goBack()
-            return
-          }
-
-          const { connectionRecord, outOfBandRecord } = await connectFromInvitation(agent, urlData)
-
-          setLoading(false)
-          navigation.getParent()?.navigate(Stacks.ConnectionStack, {
-            screen: Screens.Connection,
-            params: { connectionId: connectionRecord?.id, outOfBandId: outOfBandRecord.id },
-          })
-          return
-        }
-        // if scanned value is url -> receive message from it
-
-        const url = getUrl(value)
-
-        if (url) {
-          const message = await receiveMessageFromUrlRedirect(value, agent)
-          setLoading(false)
-          navigation.getParent()?.navigate(Stacks.ConnectionStack, {
-            screen: Screens.Connection,
-            params: { threadId: message['@id'] },
-          })
-          return
-        }
-
-        setLoading(false)
-      } catch (err: unknown) {
-        setLoading(false)
-        const error = new BifoldError(t('Error.Title1031'), t('Error.Message1031'), (err as Error).message, 1031)
-        throw error
-      }
-    }
+  const isRedirection = (url: string): boolean => {
+    return !(url.includes('oob') || url.includes('c_i') || url.includes('d_m'))
   }
 
   const handleCodeScan = async (event: BarCodeReadEvent) => {
     setQrCodeScanError(null)
     try {
       const uri = event.data
-      await handleInvitation(uri)
+      // await handleInvitation(uri)
+      setLoading(true)
+      if (isRedirection(uri)) {
+        // const response = await fetch(uri)
+        const response = await fetch(uri, {
+          method: 'GET',
+          headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        })
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+        const message = await response.json()
+        // const result = await response.json()
+        const resp = await agent.oob.parseInvitation(message)
+        if (resp) {
+          navigation.getParent()?.navigate(Stacks.ContactStack, {
+            screen: Screens.ConnectionInfo,
+            params: { invitationURL: message },
+          })
+        }
+      } else {
+        const response = await agent.oob.parseInvitation(uri)
+        if (response) {
+          navigation.getParent()?.navigate(Stacks.ContactStack, {
+            screen: Screens.ConnectionInfo,
+            params: { invitationURL: uri },
+          })
+        }
+      }
+
+      const response = await agent.oob.parseInvitation(uri)
+      if (response) {
+        navigation.getParent()?.navigate(Stacks.ContactStack, {
+          screen: Screens.ConnectionInfo,
+          params: { invitationURL: uri },
+        })
+      }
     } catch (e: unknown) {
+      setLoading(false)
       const error = new QrCodeScanError(t('Scan.InvalidQrCode'), event.data)
       setQrCodeScanError(error)
+    } finally {
+      setLoading(false)
     }
   }
 

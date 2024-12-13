@@ -6,6 +6,7 @@ import HeaderRightHome from '../components/buttons/HeaderHome'
 import SettingsMenu from '../components/buttons/SettingsMenu'
 import { useTheme } from '../contexts/theme'
 import Chat from '../screens/Chat'
+import ConnectionInfo from '../screens/ConnectionInfo'
 import ConnectionInvitation from '../screens/ConnectionInvitation'
 import ContactDetails from '../screens/ContactDetails'
 import CredentialDetails from '../screens/CredentialDetails'
@@ -86,6 +87,7 @@ const ContactStack: React.FC = () => {
           headerRight: () => <HeaderRightHome />,
         })}
       />
+      <Stack.Screen name={Screens.ConnectionInfo} component={ConnectionInfo} options={{ title: 'Accept Connection' }} />
     </Stack.Navigator>
   )
 }

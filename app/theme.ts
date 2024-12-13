@@ -204,33 +204,59 @@ const GrayscaleColors: IGrayscaleColors = {
 }
 
 const BrandColors: IBrandColors = {
-  primary: '#2E3B4E',
-  primaryDisabled: `rgba(46, 59, 78, ${lightOpacity})`,
-  secondary: '#FFFFFF',
-  labelText: '#8A93A2',
-  // tabbackground:'#E3E7EB',
+  // primary: '#2E3B4E',
+  // primaryDisabled: `rgba(46, 59, 78, ${lightOpacity})`,
+  // secondary: '#FFFFFF',
+  // labelText: '#8A93A2',
+  // // tabbackground:'#E3E7EB',
   secondaryDisabled: `rgba(46, 59, 78, ${lightOpacity})`,
-  primaryLight: '#BCC5D3',
-  highlight: '#885FFF',
-  primaryBackground: '#F7F9FC',
-  secondaryBackground: '#FFFFFF',
-  modalPrimary: '#1A1A1A',
-  modalSecondary: '#FFFFFF',
-  modalPrimaryBackground: '#F7F9FC',
-  modalSecondaryBackground: '#FFFFFF',
-  modalIcon: GrayscaleColors.darkGrey,
-  link: '#2D70B3',
-  unorderedList: GrayscaleColors.white,
-  unorderedListModal: GrayscaleColors.darkGrey,
-  text: GrayscaleColors.white,
-  icon: GrayscaleColors.darkGrey,
-  headerIcon: GrayscaleColors.white,
-  headerText: GrayscaleColors.white,
-  buttonText: GrayscaleColors.white,
-  tabBarInactive: '#BCC5D3',
-  modalOrgBackground: '#EEF2F6',
-  highlightedEclipse: '#1C2541',
-  tabsearchBackground: '#F5F5F7',
+  // primaryLight: '#BCC5D3',
+  // highlight: '#885FFF',
+  // primaryBackground: '#F7F9FC',
+  // secondaryBackground: '#FFFFFF',
+  // modalPrimary: '#1A1A1A',
+  // modalSecondary: '#FFFFFF',
+  // modalPrimaryBackground: '#F7F9FC',
+  // modalSecondaryBackground: '#FFFFFF',
+  // modalIcon: GrayscaleColors.darkGrey,
+  // link: '#2D70B3',
+  // unorderedList: GrayscaleColors.white,
+  // unorderedListModal: GrayscaleColors.darkGrey,
+  // text: GrayscaleColors.white,
+  // icon: GrayscaleColors.darkGrey,
+  // headerIcon: GrayscaleColors.white,
+  // headerText: GrayscaleColors.white,
+  // buttonText: GrayscaleColors.white,
+  // tabBarInactive: '#BCC5D3',
+  // modalOrgBackground: '#EEF2F6',
+  // highlightedEclipse: '#1C2541',
+  // tabsearchBackground: '#F5F5F7',
+
+  primary: '#F68B45', // Vibrant orange from the logo
+  primaryDisabled: `rgba(246, 139, 69, ${lightOpacity})`,
+  secondary: '#F23C57', // Bright pink from the logo
+  labelText: '#7A7A7A', // Neutral gray for readability
+  primaryLight: '#F9C290', // Lightened shade of orange
+  highlight: '#FCBA19', // Golden yellow for accents
+  primaryBackground: '#FDF7F4', // Off-white with a warm tint
+  secondaryBackground: '#FFFFFF', // Neutral white
+  modalPrimary: '#A23C57', // Darker tone of pink for contrast
+  modalSecondary: '#F5F5F5', // Light neutral background
+  modalPrimaryBackground: '#FFFFFF',
+  modalSecondaryBackground: '#FAF9F7',
+  modalIcon: '#4D4D4D', // Dark gray for icons
+  link: '#F23C57', // Same pink as secondary for consistency
+  unorderedList: '#FFFFFF',
+  unorderedListModal: '#4D4D4D',
+  text: '#FFFFFF',
+  icon: '#FFFFFF',
+  headerIcon: '#FFFFFF',
+  headerText: '#FFFFFF',
+  buttonText: '#FFFFFF',
+  tabBarInactive: '#7A7A7A',
+  modalOrgBackground: '#FFE5D1', // Pale orange for softer sections
+  highlightedEclipse: '#8A364F', // Darkened tone of purple-pink for depth
+  tabsearchBackground: '#F8F4F3', // Warm light background for tabs
 }
 
 export const ColorPallet: IColorPallet = {
