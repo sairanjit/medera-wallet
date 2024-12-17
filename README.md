@@ -7,6 +7,10 @@ This repository contains the mobile wallet for the **Medera** project, a healthc
 
 - We have started the development of the Medera mobile wallet from the [adeya-wallet](https://github.com/credebl/adeya-wallet) repository and proceed to make the changes to the codebase to suit the requirements of the hackathon and to add the functionalities required for the hackathon for the hedera credo Module and hbar payment module.
 
+## APK
+
+- You can download the APK from the [Medera Wallet](https://drive.google.com/file/d/1MoS4d-ALYpfBKiljtm_-G1peWmLyeC6V/view?usp=sharing).
+
 ## Project Overview
 
 **Medera** aims to revolutionize healthcare by leveraging the power of distributed ledger technology (DLT). Using the Hedera network, we ensure secure, transparent, and decentralized healthcare solutions.
@@ -22,6 +26,7 @@ This project was built for the **Hedera Hackathon**, showcasing the integration 
 ## Table of Contents
 
 - [Medera Mobile Wallet](#medera-mobile-wallet)
+  - [APK](#apk)
   - [Project Overview](#project-overview)
   - [Features](#features)
   - [Table of Contents](#table-of-contents)
@@ -52,7 +57,7 @@ Before running the project, ensure you have the following installed:
 
    ```bash
    git clone https://github.com/sairanjit/medera-wallet.git
-   cd medera-wallet.
+   cd medera-wallet
    ```
 
 2. Install dependencies:
