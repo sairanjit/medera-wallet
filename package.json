@@ -43,7 +43,7 @@
     "crypto-js": "^4.2.0",
     "events": "^1.1.1",
     "expo-modules-core": "^1.2.7",
-    "hedera-credo-module": "file:./hedera-credo-module-0.0.0.tgz",
+    "hedera-credo-module": "github:sairanjit/hedera-credo-module#8e8ad4b0cb65bde5a0e52df7a87a9eb1c4349df1",
     "i18next": "^23.4.1",
     "lodash.flatten": "^4.4.0",
     "lodash.shuffle": "^4.2.0",
@@ -151,6 +151,7 @@
   "packageManager": "yarn@1.22.22",
   "resolutions": {
     "@credo-ts/askar": "0.5.13",
-    "@credo-ts/core": "0.5.13"
+    "@credo-ts/core": "0.5.13",
+    "@hashgraph/sdk": "^2.54.2"
   }
 }

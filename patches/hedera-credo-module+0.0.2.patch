@@ -1,0 +1,495 @@
+diff --git a/node_modules/hedera-credo-module/build/HederaModule.d.ts b/node_modules/hedera-credo-module/build/HederaModule.d.ts
+new file mode 100644
+index 0000000..e1fb066
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/HederaModule.d.ts
+@@ -0,0 +1,8 @@
++import type { DependencyManager, Module } from '@credo-ts/core';
++import type { HederaModuleConfigOptions } from './HederaModuleConfig';
++import { HederaModuleConfig } from './HederaModuleConfig';
++export declare class HederaModule implements Module {
++    readonly config: HederaModuleConfig;
++    constructor(config: HederaModuleConfigOptions);
++    register(dependencyManager: DependencyManager): void;
++}
+diff --git a/node_modules/hedera-credo-module/build/HederaModule.js b/node_modules/hedera-credo-module/build/HederaModule.js
+new file mode 100644
+index 0000000..2f7b234
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/HederaModule.js
+@@ -0,0 +1,17 @@
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.HederaModule = void 0;
++const HederaModuleConfig_1 = require("./HederaModuleConfig");
++const ledger_1 = require("./ledger");
++class HederaModule {
++    constructor(config) {
++        this.config = new HederaModuleConfig_1.HederaModuleConfig(config);
++    }
++    register(dependencyManager) {
++        // Register config
++        dependencyManager.registerInstance(HederaModuleConfig_1.HederaModuleConfig, this.config);
++        dependencyManager.registerSingleton(ledger_1.HederaLedgerService);
++    }
++}
++exports.HederaModule = HederaModule;
++//# sourceMappingURL=HederaModule.js.map
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/HederaModule.js.map b/node_modules/hedera-credo-module/build/HederaModule.js.map
+new file mode 100644
+index 0000000..7cffd0d
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/HederaModule.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"HederaModule.js","sourceRoot":"","sources":["../src/HederaModule.ts"],"names":[],"mappings":";;;AAKA,6DAAyD;AACzD,qCAA8C;AAE9C,MAAa,YAAY;IAGvB,YAAmB,MAAiC;QAClD,IAAI,CAAC,MAAM,GAAG,IAAI,uCAAkB,CAAC,MAAM,CAAC,CAAA;IAC9C,CAAC;IAEM,QAAQ,CAAC,iBAAoC;QAClD,kBAAkB;QAClB,iBAAiB,CAAC,gBAAgB,CAAC,uCAAkB,EAAE,IAAI,CAAC,MAAM,CAAC,CAAA;QAEnE,iBAAiB,CAAC,iBAAiB,CAAC,4BAAmB,CAAC,CAAA;IAC1D,CAAC;CACF;AAbD,oCAaC"}
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/HederaModuleConfig.d.ts b/node_modules/hedera-credo-module/build/HederaModuleConfig.d.ts
+new file mode 100644
+index 0000000..74b67a3
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/HederaModuleConfig.d.ts
+@@ -0,0 +1,8 @@
++export interface HederaModuleConfigOptions {
++    operatorId?: string;
++    operatorKey?: string;
++}
++export declare class HederaModuleConfig {
++    readonly options: HederaModuleConfigOptions;
++    constructor(options: HederaModuleConfigOptions);
++}
+diff --git a/node_modules/hedera-credo-module/build/HederaModuleConfig.js b/node_modules/hedera-credo-module/build/HederaModuleConfig.js
+new file mode 100644
+index 0000000..641ad22
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/HederaModuleConfig.js
+@@ -0,0 +1,10 @@
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.HederaModuleConfig = void 0;
++class HederaModuleConfig {
++    constructor(options) {
++        this.options = options;
++    }
++}
++exports.HederaModuleConfig = HederaModuleConfig;
++//# sourceMappingURL=HederaModuleConfig.js.map
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/HederaModuleConfig.js.map b/node_modules/hedera-credo-module/build/HederaModuleConfig.js.map
+new file mode 100644
+index 0000000..c3966da
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/HederaModuleConfig.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"HederaModuleConfig.js","sourceRoot":"","sources":["../src/HederaModuleConfig.ts"],"names":[],"mappings":";;;AAKA,MAAa,kBAAkB;IAG7B,YAAmB,OAAkC;QACnD,IAAI,CAAC,OAAO,GAAG,OAAO,CAAA;IACxB,CAAC;CACF;AAND,gDAMC"}
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/dids/HederaDidRegistrar.d.ts b/node_modules/hedera-credo-module/build/dids/HederaDidRegistrar.d.ts
+new file mode 100644
+index 0000000..1d0ac4f
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/dids/HederaDidRegistrar.d.ts
+@@ -0,0 +1,16 @@
++import type { AgentContext, DidCreateOptions, DidCreateResult, DidDeactivateOptions, DidDeactivateResult, DidRegistrar, DidUpdateOptions, DidUpdateResult } from '@credo-ts/core';
++export declare class HederaDidRegistrar implements DidRegistrar {
++    readonly supportedMethods: string[];
++    create(agentContext: AgentContext, options: HederaDidCreateOptions): Promise<DidCreateResult>;
++    update(agentContext: AgentContext, options: DidUpdateOptions): Promise<DidUpdateResult>;
++    deactivate(agentContext: AgentContext, options: DidDeactivateOptions): Promise<DidDeactivateResult>;
++}
++export type SeedString = string;
++export interface HederaDidCreateOptions extends DidCreateOptions {
++    method: 'hedera';
++    did?: never;
++    secret: {
++        network: 'mainnet' | 'testnet';
++        seed: string;
++    };
++}
+diff --git a/node_modules/hedera-credo-module/build/dids/HederaDidRegistrar.js b/node_modules/hedera-credo-module/build/dids/HederaDidRegistrar.js
+new file mode 100644
+index 0000000..176201d
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/dids/HederaDidRegistrar.js
+@@ -0,0 +1,58 @@
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.HederaDidRegistrar = void 0;
++const core_1 = require("@credo-ts/core");
++const ledger_1 = require("../ledger");
++class HederaDidRegistrar {
++    constructor() {
++        this.supportedMethods = ['hedera'];
++    }
++    async create(agentContext, options) {
++        const didRepository = agentContext.dependencyManager.resolve(core_1.DidRepository);
++        const hederaLedgerService = agentContext.dependencyManager.resolve(ledger_1.HederaLedgerService);
++        let didDocument;
++        try {
++            const seedBuffer = core_1.TypedArrayEncoder.fromString(options.secret.seed);
++            await agentContext.wallet.createKey({ keyType: core_1.KeyType.Ed25519, privateKey: seedBuffer });
++            const hederaDid = await hederaLedgerService.create(seedBuffer);
++            const did = await hederaDid.resolve();
++            didDocument = core_1.JsonTransformer.fromJSON(did.toJsonTree(), core_1.DidDocument);
++            // Save the did so we know we created it and can issue with it
++            const didRecord = new core_1.DidRecord({
++                did: did.getId(),
++                role: core_1.DidDocumentRole.Created,
++                didDocument,
++            });
++            await didRepository.save(agentContext, didRecord);
++            return {
++                didDocumentMetadata: {},
++                didRegistrationMetadata: {},
++                didState: {
++                    state: 'finished',
++                    did: didDocument.id,
++                    didDocument,
++                    secret: options.secret,
++                },
++            };
++        }
++        catch (error) {
++            agentContext.config.logger.error(`Error registering DID : ${error}`);
++            return {
++                didDocumentMetadata: {},
++                didRegistrationMetadata: {},
++                didState: {
++                    state: 'failed',
++                    reason: `unknownError: ${error}`,
++                },
++            };
++        }
++    }
++    async update(agentContext, options) {
++        throw new Error('Method not implemented.');
++    }
++    async deactivate(agentContext, options) {
++        throw new Error('Method not implemented.');
++    }
++}
++exports.HederaDidRegistrar = HederaDidRegistrar;
++//# sourceMappingURL=HederaDidRegistrar.js.map
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/dids/HederaDidRegistrar.js.map b/node_modules/hedera-credo-module/build/dids/HederaDidRegistrar.js.map
+new file mode 100644
+index 0000000..e222128
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/dids/HederaDidRegistrar.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"HederaDidRegistrar.js","sourceRoot":"","sources":["../../src/dids/HederaDidRegistrar.ts"],"names":[],"mappings":";;;AAYA,yCAQuB;AACvB,sCAA+C;AAE/C,MAAa,kBAAkB;IAA/B;QACkB,qBAAgB,GAAG,CAAC,QAAQ,CAAC,CAAA;IAyD/C,CAAC;IAvDQ,KAAK,CAAC,MAAM,CAAC,YAA0B,EAAE,OAA+B;QAC7E,MAAM,aAAa,GAAG,YAAY,CAAC,iBAAiB,CAAC,OAAO,CAAC,oBAAa,CAAC,CAAA;QAC3E,MAAM,mBAAmB,GAAG,YAAY,CAAC,iBAAiB,CAAC,OAAO,CAAC,4BAAmB,CAAC,CAAA;QAEvF,IAAI,WAAwB,CAAA;QAE5B,IAAI,CAAC;YACH,MAAM,UAAU,GAAG,wBAAiB,CAAC,UAAU,CAAC,OAAO,CAAC,MAAM,CAAC,IAAI,CAAC,CAAA;YAEpE,MAAM,YAAY,CAAC,MAAM,CAAC,SAAS,CAAC,EAAE,OAAO,EAAE,cAAO,CAAC,OAAO,EAAE,UAAU,EAAE,UAAU,EAAE,CAAC,CAAA;YAEzF,MAAM,SAAS,GAAG,MAAM,mBAAmB,CAAC,MAAM,CAAC,UAAU,CAAC,CAAA;YAE9D,MAAM,GAAG,GAAG,MAAM,SAAS,CAAC,OAAO,EAAE,CAAA;YAErC,WAAW,GAAG,sBAAe,CAAC,QAAQ,CAAC,GAAG,CAAC,UAAU,EAAE,EAAE,kBAAW,CAAC,CAAA;YAErE,8DAA8D;YAC9D,MAAM,SAAS,GAAG,IAAI,gBAAS,CAAC;gBAC9B,GAAG,EAAE,GAAG,CAAC,KAAK,EAAE;gBAChB,IAAI,EAAE,sBAAe,CAAC,OAAO;gBAC7B,WAAW;aACZ,CAAC,CAAA;YACF,MAAM,aAAa,CAAC,IAAI,CAAC,YAAY,EAAE,SAAS,CAAC,CAAA;YAEjD,OAAO;gBACL,mBAAmB,EAAE,EAAE;gBACvB,uBAAuB,EAAE,EAAE;gBAC3B,QAAQ,EAAE;oBACR,KAAK,EAAE,UAAU;oBACjB,GAAG,EAAE,WAAW,CAAC,EAAE;oBACnB,WAAW;oBACX,MAAM,EAAE,OAAO,CAAC,MAAM;iBACvB;aACF,CAAA;QACH,CAAC;QAAC,OAAO,KAAK,EAAE,CAAC;YACf,YAAY,CAAC,MAAM,CAAC,MAAM,CAAC,KAAK,CAAC,2BAA2B,KAAK,EAAE,CAAC,CAAA;YACpE,OAAO;gBACL,mBAAmB,EAAE,EAAE;gBACvB,uBAAuB,EAAE,EAAE;gBAC3B,QAAQ,EAAE;oBACR,KAAK,EAAE,QAAQ;oBACf,MAAM,EAAE,iBAAiB,KAAK,EAAE;iBACjC;aACF,CAAA;QACH,CAAC;IACH,CAAC;IAEM,KAAK,CAAC,MAAM,CAAC,YAA0B,EAAE,OAAyB;QACvE,MAAM,IAAI,KAAK,CAAC,yBAAyB,CAAC,CAAA;IAC5C,CAAC;IAEM,KAAK,CAAC,UAAU,CAAC,YAA0B,EAAE,OAA6B;QAC/E,MAAM,IAAI,KAAK,CAAC,yBAAyB,CAAC,CAAA;IAC5C,CAAC;CACF;AA1DD,gDA0DC"}
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/dids/HederaDidResolver.d.ts b/node_modules/hedera-credo-module/build/dids/HederaDidResolver.d.ts
+new file mode 100644
+index 0000000..6e31b59
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/dids/HederaDidResolver.d.ts
+@@ -0,0 +1,7 @@
++import { type AgentContext, type DidResolutionResult, type DidResolver, type ParsedDid } from '@credo-ts/core';
++export declare class HederaDidResolver implements DidResolver {
++    readonly supportedMethods: string[];
++    readonly allowsCaching = true;
++    readonly allowsLocalDidRecord = true;
++    resolve(agentContext: AgentContext, did: string, parsed: ParsedDid): Promise<DidResolutionResult>;
++}
+diff --git a/node_modules/hedera-credo-module/build/dids/HederaDidResolver.js b/node_modules/hedera-credo-module/build/dids/HederaDidResolver.js
+new file mode 100644
+index 0000000..dfc590b
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/dids/HederaDidResolver.js
+@@ -0,0 +1,49 @@
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.HederaDidResolver = void 0;
++const core_1 = require("@credo-ts/core");
++class HederaDidResolver {
++    constructor() {
++        this.supportedMethods = ['hedera'];
++        this.allowsCaching = true;
++        this.allowsLocalDidRecord = true;
++    }
++    async resolve(agentContext, did, parsed) {
++        const didDocumentMetadata = {};
++        // const ledgerService = agentContext.dependencyManager.resolve(HederaLedgerService)
++        try {
++            // const didDoc = await ledgerService.resolve(did)
++            // const didJson = didDoc.toJsonTree()
++            // const updatedContextDidJson = {
++            //   ...didJson,
++            //   '@context': ['https://www.w3.org/ns/did/v1', 'https://w3id.org/security/suites/ed25519-2018/v1'],
++            // }
++            const response = await fetch(`https://medera-backend.onrender.com/agent/resolveDid?did=${did}`, {
++                method: 'POST',
++                headers: {
++                    'Content-Type': 'application/json',
++                },
++            });
++            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
++            const responseJson = await response.json();
++            console.log('responseJson', responseJson);
++            return {
++                didDocument: core_1.JsonTransformer.fromJSON(responseJson === null || responseJson === void 0 ? void 0 : responseJson.didDocument, core_1.DidDocument),
++                didDocumentMetadata: responseJson === null || responseJson === void 0 ? void 0 : responseJson.didDocumentMetadata,
++                didResolutionMetadata: responseJson === null || responseJson === void 0 ? void 0 : responseJson.didResolutionMetadata,
++            };
++        }
++        catch (error) {
++            return {
++                didDocument: null,
++                didDocumentMetadata,
++                didResolutionMetadata: {
++                    error: 'notFound',
++                    message: `resolver_error: Unable to resolve did '${did}': ${error}`,
++                },
++            };
++        }
++    }
++}
++exports.HederaDidResolver = HederaDidResolver;
++//# sourceMappingURL=HederaDidResolver.js.map
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/dids/HederaDidResolver.js.map b/node_modules/hedera-credo-module/build/dids/HederaDidResolver.js.map
+new file mode 100644
+index 0000000..196c239
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/dids/HederaDidResolver.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"HederaDidResolver.js","sourceRoot":"","sources":["../../src/dids/HederaDidResolver.ts"],"names":[],"mappings":";;;AAAA,yCAOuB;AAGvB,MAAa,iBAAiB;IAA9B;QACkB,qBAAgB,GAAG,CAAC,QAAQ,CAAC,CAAA;QAE7B,kBAAa,GAAG,IAAI,CAAA;QAEpB,yBAAoB,GAAG,IAAI,CAAA;IA4C7C,CAAC;IA1CQ,KAAK,CAAC,OAAO,CAAC,YAA0B,EAAE,GAAW,EAAE,MAAiB;QAC7E,MAAM,mBAAmB,GAAG,EAAE,CAAA;QAE9B,oFAAoF;QACpF,IAAI,CAAC;YACH,kDAAkD;YAElD,sCAAsC;YAEtC,kCAAkC;YAClC,gBAAgB;YAChB,sGAAsG;YACtG,IAAI;YAEJ,MAAM,QAAQ,GAAG,MAAM,KAAK,CAAC,4DAA4D,GAAG,EAAE,EAAE;gBAC9F,MAAM,EAAE,MAAM;gBACd,OAAO,EAAE;oBACP,cAAc,EAAE,kBAAkB;iBACnC;aACF,CAAC,CAAA;YAEF,4DAA4D;YAC5D,MAAM,YAAY,GAAQ,MAAM,QAAQ,CAAC,IAAI,EAAE,CAAA;YAE/C,OAAO,CAAC,GAAG,CAAC,cAAc,EAAE,YAAY,CAAC,CAAA;YAEzC,OAAO;gBACL,WAAW,EAAE,sBAAe,CAAC,QAAQ,CAAC,YAAY,aAAZ,YAAY,uBAAZ,YAAY,CAAE,WAAW,EAAE,kBAAW,CAAC;gBAC7E,mBAAmB,EAAE,YAAY,aAAZ,YAAY,uBAAZ,YAAY,CAAE,mBAAmB;gBACtD,qBAAqB,EAAE,YAAY,aAAZ,YAAY,uBAAZ,YAAY,CAAE,qBAAqB;aAC3D,CAAA;QACH,CAAC;QAAC,OAAO,KAAK,EAAE,CAAC;YACf,OAAO;gBACL,WAAW,EAAE,IAAI;gBACjB,mBAAmB;gBACnB,qBAAqB,EAAE;oBACrB,KAAK,EAAE,UAAU;oBACjB,OAAO,EAAE,0CAA0C,GAAG,MAAM,KAAK,EAAE;iBACpE;aACF,CAAA;QACH,CAAC;IACH,CAAC;CACF;AAjDD,8CAiDC"}
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/dids/index.d.ts b/node_modules/hedera-credo-module/build/dids/index.d.ts
+new file mode 100644
+index 0000000..6543512
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/dids/index.d.ts
+@@ -0,0 +1,2 @@
++export * from './HederaDidRegistrar';
++export * from './HederaDidResolver';
+diff --git a/node_modules/hedera-credo-module/build/dids/index.js b/node_modules/hedera-credo-module/build/dids/index.js
+new file mode 100644
+index 0000000..3b44772
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/dids/index.js
+@@ -0,0 +1,19 @@
++"use strict";
++var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
++    if (k2 === undefined) k2 = k;
++    var desc = Object.getOwnPropertyDescriptor(m, k);
++    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
++      desc = { enumerable: true, get: function() { return m[k]; } };
++    }
++    Object.defineProperty(o, k2, desc);
++}) : (function(o, m, k, k2) {
++    if (k2 === undefined) k2 = k;
++    o[k2] = m[k];
++}));
++var __exportStar = (this && this.__exportStar) || function(m, exports) {
++    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
++};
++Object.defineProperty(exports, "__esModule", { value: true });
++__exportStar(require("./HederaDidRegistrar"), exports);
++__exportStar(require("./HederaDidResolver"), exports);
++//# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/dids/index.js.map b/node_modules/hedera-credo-module/build/dids/index.js.map
+new file mode 100644
+index 0000000..1ebe38b
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/dids/index.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"index.js","sourceRoot":"","sources":["../../src/dids/index.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;AAAA,uDAAoC;AACpC,sDAAmC"}
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/index.d.ts b/node_modules/hedera-credo-module/build/index.d.ts
+new file mode 100644
+index 0000000..23f8624
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/index.d.ts
+@@ -0,0 +1,2 @@
++export { HederaDidRegistrar, HederaDidResolver } from './dids';
++export { HederaModule } from './HederaModule';
+diff --git a/node_modules/hedera-credo-module/build/index.js b/node_modules/hedera-credo-module/build/index.js
+new file mode 100644
+index 0000000..9a7060e
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/index.js
+@@ -0,0 +1,9 @@
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.HederaModule = exports.HederaDidResolver = exports.HederaDidRegistrar = void 0;
++var dids_1 = require("./dids");
++Object.defineProperty(exports, "HederaDidRegistrar", { enumerable: true, get: function () { return dids_1.HederaDidRegistrar; } });
++Object.defineProperty(exports, "HederaDidResolver", { enumerable: true, get: function () { return dids_1.HederaDidResolver; } });
++var HederaModule_1 = require("./HederaModule");
++Object.defineProperty(exports, "HederaModule", { enumerable: true, get: function () { return HederaModule_1.HederaModule; } });
++//# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/index.js.map b/node_modules/hedera-credo-module/build/index.js.map
+new file mode 100644
+index 0000000..5d551ba
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/index.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"index.js","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":";;;AAAA,+BAA8D;AAArD,0GAAA,kBAAkB,OAAA;AAAE,yGAAA,iBAAiB,OAAA;AAE9C,+CAA6C;AAApC,4GAAA,YAAY,OAAA"}
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/ledger/HederaLedgerService.d.ts b/node_modules/hedera-credo-module/build/ledger/HederaLedgerService.d.ts
+new file mode 100644
+index 0000000..c5d72e7
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/ledger/HederaLedgerService.d.ts
+@@ -0,0 +1,9 @@
++import { type Buffer } from '@credo-ts/core';
++import { HcsDid } from '@hashgraph/did-sdk-js';
++import { HederaModuleConfig } from '../HederaModuleConfig';
++export declare class HederaLedgerService {
++    private client;
++    constructor(hederaModuleConfig: HederaModuleConfig);
++    create(seed: Buffer): Promise<HcsDid>;
++    resolve(did: string): Promise<import("@hashgraph/did-sdk-js").DidDocument>;
++}
+diff --git a/node_modules/hedera-credo-module/build/ledger/HederaLedgerService.js b/node_modules/hedera-credo-module/build/ledger/HederaLedgerService.js
+new file mode 100644
+index 0000000..6c3d01c
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/ledger/HederaLedgerService.js
+@@ -0,0 +1,44 @@
++"use strict";
++var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
++    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
++    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
++    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
++    return c > 3 && r && Object.defineProperty(target, key, r), r;
++};
++var __metadata = (this && this.__metadata) || function (k, v) {
++    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
++};
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.HederaLedgerService = void 0;
++const core_1 = require("@credo-ts/core");
++const did_sdk_js_1 = require("@hashgraph/did-sdk-js");
++const sdk_1 = require("@hashgraph/sdk");
++// biome-ignore lint/style/useImportType: <explanation>
++const HederaModuleConfig_1 = require("../HederaModuleConfig");
++let HederaLedgerService = class HederaLedgerService {
++    constructor(hederaModuleConfig) {
++        var _a, _b;
++        const client = sdk_1.Client.forTestnet({ scheduleNetworkUpdate: false });
++        if (((_a = hederaModuleConfig.options) === null || _a === void 0 ? void 0 : _a.operatorId) && ((_b = hederaModuleConfig.options) === null || _b === void 0 ? void 0 : _b.operatorKey)) {
++            client.setOperator(hederaModuleConfig.options.operatorId, hederaModuleConfig.options.operatorKey);
++        }
++        this.client = client;
++    }
++    async create(seed) {
++        const privateKey = await sdk_1.PrivateKey.fromBytes(seed);
++        const hcsDid = new did_sdk_js_1.HcsDid({ privateKey, client: this.client });
++        await hcsDid.register();
++        return hcsDid;
++    }
++    async resolve(did) {
++        const hcsDid = new did_sdk_js_1.HcsDid({ identifier: did, client: this.client });
++        const didDocument = await hcsDid.resolve();
++        return didDocument;
++    }
++};
++exports.HederaLedgerService = HederaLedgerService;
++exports.HederaLedgerService = HederaLedgerService = __decorate([
++    (0, core_1.injectable)(),
++    __metadata("design:paramtypes", [HederaModuleConfig_1.HederaModuleConfig])
++], HederaLedgerService);
++//# sourceMappingURL=HederaLedgerService.js.map
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/ledger/HederaLedgerService.js.map b/node_modules/hedera-credo-module/build/ledger/HederaLedgerService.js.map
+new file mode 100644
+index 0000000..9069a4f
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/ledger/HederaLedgerService.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"HederaLedgerService.js","sourceRoot":"","sources":["../../src/ledger/HederaLedgerService.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,yCAAwD;AACxD,sDAA8C;AAC9C,wCAA8D;AAC9D,uDAAuD;AACvD,8DAA0D;AAGnD,IAAM,mBAAmB,GAAzB,MAAM,mBAAmB;IAG9B,YAAmB,kBAAsC;;QACvD,MAAM,MAAM,GAAG,YAAM,CAAC,UAAU,CAAC,EAAE,qBAAqB,EAAE,KAAK,EAAE,CAAC,CAAA;QAClE,IAAI,CAAA,MAAA,kBAAkB,CAAC,OAAO,0CAAE,UAAU,MAAI,MAAA,kBAAkB,CAAC,OAAO,0CAAE,WAAW,CAAA,EAAE,CAAC;YACtF,MAAM,CAAC,WAAW,CAAC,kBAAkB,CAAC,OAAO,CAAC,UAAU,EAAE,kBAAkB,CAAC,OAAO,CAAC,WAAW,CAAC,CAAA;QACnG,CAAC;QACD,IAAI,CAAC,MAAM,GAAG,MAAM,CAAA;IACtB,CAAC;IAEM,KAAK,CAAC,MAAM,CAAC,IAAY;QAC9B,MAAM,UAAU,GAAG,MAAM,gBAAU,CAAC,SAAS,CAAC,IAAI,CAAC,CAAA;QAEnD,MAAM,MAAM,GAAG,IAAI,mBAAM,CAAC,EAAE,UAAU,EAAE,MAAM,EAAE,IAAI,CAAC,MAAM,EAAE,CAAC,CAAA;QAE9D,MAAM,MAAM,CAAC,QAAQ,EAAE,CAAA;QAEvB,OAAO,MAAM,CAAA;IACf,CAAC;IAEM,KAAK,CAAC,OAAO,CAAC,GAAW;QAC9B,MAAM,MAAM,GAAG,IAAI,mBAAM,CAAC,EAAE,UAAU,EAAE,GAAG,EAAE,MAAM,EAAE,IAAI,CAAC,MAAM,EAAE,CAAC,CAAA;QAEnE,MAAM,WAAW,GAAG,MAAM,MAAM,CAAC,OAAO,EAAE,CAAA;QAE1C,OAAO,WAAW,CAAA;IACpB,CAAC;CACF,CAAA;AA5BY,kDAAmB;8BAAnB,mBAAmB;IAD/B,IAAA,iBAAU,GAAE;qCAI4B,uCAAkB;GAH9C,mBAAmB,CA4B/B"}
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/ledger/index.d.ts b/node_modules/hedera-credo-module/build/ledger/index.d.ts
+new file mode 100644
+index 0000000..c2738d4
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/ledger/index.d.ts
+@@ -0,0 +1 @@
++export * from './HederaLedgerService';
+diff --git a/node_modules/hedera-credo-module/build/ledger/index.js b/node_modules/hedera-credo-module/build/ledger/index.js
+new file mode 100644
+index 0000000..ce2d131
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/ledger/index.js
+@@ -0,0 +1,18 @@
++"use strict";
++var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
++    if (k2 === undefined) k2 = k;
++    var desc = Object.getOwnPropertyDescriptor(m, k);
++    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
++      desc = { enumerable: true, get: function() { return m[k]; } };
++    }
++    Object.defineProperty(o, k2, desc);
++}) : (function(o, m, k, k2) {
++    if (k2 === undefined) k2 = k;
++    o[k2] = m[k];
++}));
++var __exportStar = (this && this.__exportStar) || function(m, exports) {
++    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
++};
++Object.defineProperty(exports, "__esModule", { value: true });
++__exportStar(require("./HederaLedgerService"), exports);
++//# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/build/ledger/index.js.map b/node_modules/hedera-credo-module/build/ledger/index.js.map
+new file mode 100644
+index 0000000..d98759e
+--- /dev/null
++++ b/node_modules/hedera-credo-module/build/ledger/index.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"index.js","sourceRoot":"","sources":["../../src/ledger/index.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;AAAA,wDAAqC"}
+\ No newline at end of file
+diff --git a/node_modules/hedera-credo-module/src/dids/HederaDidResolver.ts b/node_modules/hedera-credo-module/src/dids/HederaDidResolver.ts
+index 6388900..386099b 100644
+--- a/node_modules/hedera-credo-module/src/dids/HederaDidResolver.ts
++++ b/node_modules/hedera-credo-module/src/dids/HederaDidResolver.ts
+@@ -18,23 +18,33 @@ export class HederaDidResolver implements DidResolver {
+   public async resolve(agentContext: AgentContext, did: string, parsed: ParsedDid): Promise<DidResolutionResult> {
+     const didDocumentMetadata = {}
+ 
+-    const ledgerService = agentContext.dependencyManager.resolve(HederaLedgerService)
++    // const ledgerService = agentContext.dependencyManager.resolve(HederaLedgerService)
+     try {
+-      const didDoc = await ledgerService.resolve(did)
++      // const didDoc = await ledgerService.resolve(did)
+ 
+-      const didJson = didDoc.toJsonTree()
++      // const didJson = didDoc.toJsonTree()
+ 
+-      const updatedContextDidJson = {
+-        ...didJson,
+-        '@context': ['https://www.w3.org/ns/did/v1', 'https://w3id.org/security/suites/ed25519-2018/v1'],
+-      }
++      // const updatedContextDidJson = {
++      //   ...didJson,
++      //   '@context': ['https://www.w3.org/ns/did/v1', 'https://w3id.org/security/suites/ed25519-2018/v1'],
++      // }
+ 
+-      return {
+-        didDocument: JsonTransformer.fromJSON(updatedContextDidJson, DidDocument),
+-        didDocumentMetadata,
+-        didResolutionMetadata: {
+-          contentType: 'application/did+json',
++      const response = await fetch(`https://medera-backend.onrender.com/agent/resolveDid?did=${did}`, {
++        method: 'POST',
++        headers: {
++          'Content-Type': 'application/json',
+         },
++      })
++
++      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
++      const responseJson: any = await response.json()
++
++      console.log('responseJson', responseJson)
++
++      return {
++        didDocument: JsonTransformer.fromJSON(responseJson?.didDocument, DidDocument),
++        didDocumentMetadata: responseJson?.didDocumentMetadata,
++        didResolutionMetadata: responseJson?.didResolutionMetadata,
+       }
+     } catch (error) {
+       return {

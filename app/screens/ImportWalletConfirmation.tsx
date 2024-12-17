@@ -155,7 +155,7 @@ const ImportWalletVerify: React.FC<ImportWalletVerifyProps> = ({ navigation }) =
           ...getAgentModules({
             indyNetworks: indyLedgers,
             mediatorInvitationUrl: Config.MEDIATOR_URL!,
-            mediatorPickupStrategy: MediatorPickupStrategy.PickUpV2LiveMode,
+            mediatorPickupStrategy: MediatorPickupStrategy.PickUpV2,
           }),
           dids: new DidsModule({
             resolvers: [new IndyVdrIndyDidResolver(), new WebDidResolver()],

@@ -6705,9 +6705,9 @@ hash.js@1.1.7, hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-"hedera-credo-module@file:./hedera-credo-module-0.0.0.tgz":
-  version "0.0.0"
-  resolved "file:./hedera-credo-module-0.0.0.tgz#f085b2616849a353598c1093bd5e39dc31fb3253"
+"hedera-credo-module@github:sairanjit/hedera-credo-module#8e8ad4b0cb65bde5a0e52df7a87a9eb1c4349df1":
+  version "0.0.2"
+  resolved "https://codeload.github.com/sairanjit/hedera-credo-module/tar.gz/8e8ad4b0cb65bde5a0e52df7a87a9eb1c4349df1"
   dependencies:
     "@credo-ts/askar" "^0.5.13"
     "@credo-ts/core" "^0.5.13"

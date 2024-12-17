@@ -234,7 +234,7 @@ const BrandColors: IBrandColors = {
 
   primary: '#F68B45', // Vibrant orange from the logo
   primaryDisabled: `rgba(246, 139, 69, ${lightOpacity})`,
-  secondary: '#F23C57', // Bright pink from the logo
+  secondary: '#FFFFFF', // Bright pink from the logo
   labelText: '#7A7A7A', // Neutral gray for readability
   primaryLight: '#F9C290', // Lightened shade of orange
   highlight: '#FCBA19', // Golden yellow for accents
@@ -819,7 +819,7 @@ export const DialogTheme = {
 }
 
 const LoadingTheme = {
-  backgroundColor: ColorPallet.brand.secondary,
+  backgroundColor: ColorPallet.brand.primaryBackground,
 }
 
 const PINInputTheme = {

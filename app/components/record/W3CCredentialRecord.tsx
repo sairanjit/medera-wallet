@@ -5,6 +5,7 @@ import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View }
 
 import { useTheme } from '../../contexts/theme'
 import { Field, W3CCredentialAttributeField } from '../../types/record'
+import { transformToKeyValueArray } from '../../utils/hedera'
 import { testIdWithKey } from '../../utils/testable'
 
 import RecordFooter from './RecordFooter'
@@ -78,6 +79,15 @@ const W3CCredentialRecord: React.FC<RecordProps> = ({
     resetShown()
   }, [tables])
 
+  const isJSONString = (str: string): boolean => {
+    try {
+      JSON.parse(str)
+    } catch (e) {
+      return false
+    }
+    return true
+  }
+
   return (
     <FlatList
       data={tables}
@@ -101,20 +111,59 @@ const W3CCredentialRecord: React.FC<RecordProps> = ({
             )}
           </View>
           <View>
-            {table.rows.map((row, idx) => (
-              <W3CCredentialRecordField
-                key={row.key}
-                field={row}
-                hideFieldValue={hideFieldValues}
-                onToggleViewPressed={() => {
-                  const newShowState = [...shown]
-                  newShowState[index][idx] = !shown[index][idx]
-                  setShown(newShowState)
-                }}
-                shown={hideFieldValues ? !!(shown?.[index]?.[idx] ?? false) : true}
-                hideBottomBorder={idx === table.rows.length - 1}
-              />
-            ))}
+            {table.rows.map((row, idx) => {
+              if (isJSONString(row.value)) {
+                const value = JSON.parse(row.value)
+                const array = transformToKeyValueArray(value)
+
+                return (
+                  <View key={idx}>
+                    {array.map((item, idx) => {
+                      if (Array.isArray(item.value)) {
+                        return item.value.map(v => {
+                          return (
+                            <W3CCredentialRecordField
+                              key={v.key}
+                              field={v}
+                              hideFieldValue={hideFieldValues}
+                              onToggleViewPressed={() => {}}
+                              shown={true}
+                              hideBottomBorder={idx === table.rows.length - 1}
+                            />
+                          )
+                        })
+                      }
+
+                      return (
+                        <W3CCredentialRecordField
+                          key={item.key}
+                          field={item}
+                          hideFieldValue={hideFieldValues}
+                          onToggleViewPressed={() => {}}
+                          shown={true}
+                          hideBottomBorder={idx === table.rows.length - 1}
+                        />
+                      )
+                    })}
+                  </View>
+                )
+              }
+
+              return (
+                <W3CCredentialRecordField
+                  key={row.key}
+                  field={row}
+                  hideFieldValue={hideFieldValues}
+                  onToggleViewPressed={() => {
+                    const newShowState = [...shown]
+                    newShowState[index][idx] = !shown[index][idx]
+                    setShown(newShowState)
+                  }}
+                  shown={hideFieldValues ? !!(shown?.[index]?.[idx] ?? false) : true}
+                  hideBottomBorder={idx === table.rows.length - 1}
+                />
+              )
+            })}
           </View>
         </View>
       )}

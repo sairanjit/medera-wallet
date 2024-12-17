@@ -293,7 +293,7 @@ const Splash: React.FC = () => {
             ...getAgentModules({
               indyNetworks: indyLedgers,
               mediatorInvitationUrl: Config.MEDIATOR_URL!,
-              mediatorPickupStrategy: MediatorPickupStrategy.PickUpV2LiveMode,
+              mediatorPickupStrategy: MediatorPickupStrategy.PickUpV2,
             }),
             dids: new DidsModule({
               resolvers: [new HederaDidResolver()],

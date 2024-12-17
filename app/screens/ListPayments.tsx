@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
-import { Client, AccountId, AccountBalanceQuery, AccountInfoQuery, PrivateKey } from '@hashgraph/sdk'
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, StatusBar } from 'react-native'
 
 import Button, { ButtonType } from '../components/buttons/Button'
+import LoadingModal from '../components/modals/LoadingModal'
 import { useTheme } from '../contexts/theme'
 import { TextTheme } from '../theme'
+import { getAccountInfo, getBalance } from '../utils/hedera'
 
 // Mock data for transactions and balance
 const MOCK_BALANCE = '1 ℏ'
@@ -16,18 +17,13 @@ const MOCK_TRANSACTIONS = [
   { id: '4', date: '2024-05-12', amount: '0.3 ℏ', from: 'Work' },
 ]
 
-const OPERATOR_ID = '0.0.5115185'
-const OPERATOR_KEY = '302a300506032b6570032100bfd5934e0bc6efd2ed70b422882e7704d8829523cc61d6dfe55f71286e2cf090'
-
 const ListPayments = () => {
-  const operatorId = AccountId.fromString(OPERATOR_ID)
-  const operatorKey = PrivateKey.fromString(OPERATOR_KEY)
-  const client = Client.forTestnet().setOperator(operatorId, operatorKey)
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [balance, setBalance] = useState(MOCK_BALANCE)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [transactions, setTransactions] = useState(MOCK_TRANSACTIONS)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [accountId, setAccountId] = useState('')
 
   const { ColorPallet } = useTheme()
 
@@ -91,41 +87,25 @@ const ListPayments = () => {
 
   useEffect(() => {
     const init = async () => {
-      // try {
-      //   const response = await new TransferTransaction()
-      //     .addHbarTransfer(operatorId, -1)
-      //     .addHbarTransfer('0.0.3', 1)
-      //     .execute(client)
-      //   console.log('response', response)
-      //   // setTransaction(response)
-      // } catch (err: any) {
-      //   console.log('err', err)
-      //   // Alert.alert(err.toString())
-      // }
       try {
-        const info = await new AccountInfoQuery().setAccountId(operatorId).execute(client)
-        console.log('info', info)
-        // setInfo(info)
-      } catch (err: any) {
-        // Alert.alert(err.toString())
+        setLoading(true)
+        const response = await getAccountInfo()
+        setAccountId(response.accountId.toString())
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+        console.log('error', error)
       }
 
       try {
-        const balance = await new AccountBalanceQuery().setAccountId(operatorId).execute(client)
-        console.log('balance', balance)
+        setLoading(true)
+        const balance = await getBalance()
         setBalance(balance.hbars.toString())
+        setLoading(false)
       } catch (err: any) {
-        console.log('B Error', err)
-        // Alert.alert(err.toString())
+        setLoading(false)
+        console.log('Balance Error', err)
       }
-
-      // try {
-      //   const mnemonic = await Mnemonic.generate12()
-
-      //   setMnemonic(mnemonic)
-      // } catch (err: any) {
-      //   Alert.alert(err.toString())
-      // }
     }
     init()
   }, [])
@@ -149,7 +129,7 @@ const ListPayments = () => {
       | null
       | undefined
   }) => {
-    const isIncoming = transaction.amount.includes('-')
+    const isOutgoing = transaction.amount.includes('-')
     return (
       <View key={transaction.id} style={styles.transactionItem}>
         <View style={styles.transactionDetails}>
@@ -158,7 +138,7 @@ const ListPayments = () => {
           </Text>
           <Text style={{ ...TextTheme.labelSubtitle }}>{transaction.date}</Text>
         </View>
-        <Text style={[styles.amountText, isIncoming ? styles.incomingAmount : styles.outgoingAmount]}>
+        <Text style={[styles.amountText, !isOutgoing ? styles.incomingAmount : styles.outgoingAmount]}>
           {/* {isIncoming ? '+' : '-'} */}
           {formatCurrency(transaction.amount)}
         </Text>
@@ -168,14 +148,25 @@ const ListPayments = () => {
 
   const handlePay = () => {}
 
+  if (loading) {
+    return <LoadingModal />
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
 
       {/* Balance Section */}
-      <View style={styles.balanceContainer}>
-        <Text style={{ ...TextTheme.label }}>Total Balance</Text>
-        <Text style={{ ...TextTheme.headingThree }}>{formatCurrency(balance)}</Text>
+      <View style={styles.row}>
+        <View style={styles.balanceContainer}>
+          <Text style={{ ...TextTheme.label }}>Account ID</Text>
+          <Text style={{ ...TextTheme.headingThree }}>{accountId}</Text>
+        </View>
+
+        <View style={styles.balanceContainer}>
+          <Text style={{ ...TextTheme.label }}>Total Balance</Text>
+          <Text style={{ ...TextTheme.headingThree }}>{formatCurrency(balance)}</Text>
+        </View>
       </View>
 
       {/* Pay Button */}

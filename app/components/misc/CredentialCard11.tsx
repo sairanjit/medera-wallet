@@ -326,7 +326,9 @@ const CredentialCard11: React.FC<CredentialCard11Props> = ({
   }
 
   const renderCardAttribute = (item: Attribute & Predicate) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { label, value } = parseAttribute(item)
+
     return (
       item && (
         <View style={{ marginTop: 15 }}>
@@ -343,7 +345,8 @@ const CredentialCard11: React.FC<CredentialCard11Props> = ({
           ) : (
             <AttributeLabel label={label} />
           )}
-          {!(item?.value || item?.pValue) ? null : <AttributeValue value={value} />}
+          {/* {!(item?.value || item?.pValue) ? null : <AttributeValue value={value} />} */}
+          {!(item?.value || item?.pValue) ? null : <AttributeValue value={'********'} />}
         </View>
       )
     )

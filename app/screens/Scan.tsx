@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
 import type { BarCodeReadEvent } from 'react-native-camera'
 
+import { Buffer } from '@adeya/ssi'
 import { StackScreenProps } from '@react-navigation/stack'
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -36,23 +38,50 @@ const Scan: React.FC<ScanProps> = ({ navigation, route }) => {
     return !(url.includes('oob') || url.includes('c_i') || url.includes('d_m'))
   }
 
+  const checkIfAccountIdExists = (url: string): string | false => {
+    try {
+      const decodedValue = new Buffer(url, 'base64').toString('utf-8')
+      const value = JSON.parse(decodedValue)
+      return value?.accountId
+    } catch (error) {
+      return false
+    }
+  }
+
   const handleCodeScan = async (event: BarCodeReadEvent) => {
     setQrCodeScanError(null)
     try {
       const uri = event.data
       // await handleInvitation(uri)
       setLoading(true)
+      const value = checkIfAccountIdExists(uri)
+      console.log('value', value)
+      if (value) {
+        navigation.getParent()?.navigate(Stacks.ContactStack, {
+          screen: Screens.SendPayment,
+          params: { accountId: value },
+        })
+        setLoading(false)
+        return
+      }
+
+      console.log("value doesn't exist", uri)
+
+      console.log('isRedirection(uri)', isRedirection(uri))
+
       if (isRedirection(uri)) {
-        // const response = await fetch(uri)
+        console.log('1111')
         const response = await fetch(uri, {
           method: 'GET',
           headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
         })
+        console.log('2222', JSON.stringify(response))
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)
         }
         const message = await response.json()
-        // const result = await response.json()
+        console.log('message', message)
+
         const resp = await agent.oob.parseInvitation(message)
         if (resp) {
           navigation.getParent()?.navigate(Stacks.ContactStack, {
@@ -78,6 +107,8 @@ const Scan: React.FC<ScanProps> = ({ navigation, route }) => {
         })
       }
     } catch (e: unknown) {
+      // eslint-disable-next-line no-console
+      console.log('qrcode scan error', e)
       setLoading(false)
       const error = new QrCodeScanError(t('Scan.InvalidQrCode'), event.data)
       setQrCodeScanError(error)

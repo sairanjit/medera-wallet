@@ -16,6 +16,7 @@ import Home from '../screens/Home'
 import ListContacts from '../screens/ListContacts'
 import ProofRequest from '../screens/ProofRequest'
 import ProofRequestW3C from '../screens/ProofRequestW3C'
+import SendPaymentScreen from '../screens/SendPaymentScreen'
 import WhatAreContacts from '../screens/WhatAreContacts'
 import { ContactStackParams, Screens } from '../types/navigators'
 import { testIdWithKey } from '../utils/testable'
@@ -88,6 +89,14 @@ const ContactStack: React.FC = () => {
         })}
       />
       <Stack.Screen name={Screens.ConnectionInfo} component={ConnectionInfo} options={{ title: 'Accept Connection' }} />
+
+      <Stack.Screen
+        name={Screens.SendPayment}
+        component={SendPaymentScreen}
+        options={() => ({
+          title: 'Send Payment',
+        })}
+      />
     </Stack.Navigator>
   )
 }

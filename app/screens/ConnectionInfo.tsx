@@ -1,5 +1,6 @@
+import { useConnectionById } from '@adeya/ssi'
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { OutOfBandDidCommService } from '@credo-ts/core'
+import { AutoAcceptProof, DidExchangeState, OutOfBandDidCommService, utils } from '@credo-ts/core'
 import { CommonActions } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
 import React, { useEffect, useState } from 'react'
@@ -13,6 +14,7 @@ import { ToastType } from '../components/toast/BaseToast'
 import { BifoldError } from '../types/error'
 import { ContactStackParams, Screens, Stacks } from '../types/navigators'
 import { useAppAgent } from '../utils/agent'
+import { checkIfDIDExistsInTrustRegistry } from '../utils/hedera'
 import {
   checkIfAlreadyConnected,
   connectFromInvitation,
@@ -29,6 +31,8 @@ const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ route, navigation }) =>
   const { invitationURL } = route.params || {}
 
   const [loading, setLoading] = useState<boolean>(false)
+  const [connectionRecordId, setConnectionRecordId] = useState<string | undefined>(undefined)
+  const record = useConnectionById(connectionRecordId ?? '')
 
   const { agent } = useAppAgent()
   const { t } = useTranslation()
@@ -39,6 +43,7 @@ const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ route, navigation }) =>
     serviceEndpoint: string
     issuerDid: string
     isTrusted: boolean
+    goal: string
   } | null>(null)
 
   useEffect(() => {
@@ -62,18 +67,83 @@ const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ route, navigation }) =>
           }
         }
 
+        // Check from trust registry
+        const message = await checkIfDIDExistsInTrustRegistry(outOfBandInvitation?.goalCode ?? '')
+        // eslint-disable-next-line no-console
+        console.log('message:::::::::::::::::::::::', message)
+
         setContactDetails({
           label: outOfBandInvitation.label ?? 'Unknown Connection',
           logo: outOfBandInvitation.imageUrl ?? '',
           serviceEndpoint: serviceEndpoint ?? 'N/A',
-          issuerDid: 'issuer did',
-          isTrusted: true,
+          issuerDid: outOfBandInvitation?.goalCode ?? 'issuer did',
+          isTrusted: message,
+          goal: outOfBandInvitation?.goal ?? '',
         })
       }
     }
 
     getContactDetails()
   }, [invitationURL])
+
+  useEffect(() => {
+    if (!record) {
+      return
+    }
+
+    const sendAsyncProof = async () => {
+      if (record && record.state === DidExchangeState.Completed) {
+        try {
+          setLoading(true)
+          await agent.proofs.proposeProof({
+            connectionId: record.id,
+            proofFormats: {
+              presentationExchange: {
+                presentationDefinition: {
+                  id: utils.uuid(),
+                  name: 'Prescription Proof',
+                  purpose: 'To verify your prescription',
+                  input_descriptors: [
+                    {
+                      id: 'prescription',
+                      name: 'Prescription',
+                      purpose: 'To verify your prescription',
+                      schema: [
+                        {
+                          uri: 'https://ghkrishna.github.io/schemas/Prescription.json',
+                        },
+                      ],
+                      constraints: {
+                        fields: [
+                          {
+                            path: ['$.credentialSubject.prescription', '$.credentialSubject.patientDetails'],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+            protocolVersion: 'v2',
+            autoAcceptProof: AutoAcceptProof.Never,
+          })
+          setLoading(false)
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: Stacks.TabStack }],
+            }),
+          )
+        } catch (error) {
+          setLoading(false)
+          // eslint-disable-next-line no-console
+          console.log('Error while proposing proof', error)
+        }
+      }
+    }
+    sendAsyncProof()
+  }, [record])
 
   const styles = StyleSheet.create({
     container: {
@@ -181,10 +251,15 @@ const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ route, navigation }) =>
 
       const { connectionRecord, outOfBandRecord } = await connectFromInvitation(agent, value)
       setLoading(false)
-      navigation.getParent()?.navigate(Stacks.ConnectionStack, {
-        screen: Screens.Connection,
-        params: { connectionId: connectionRecord?.id, outOfBandId: outOfBandRecord.id },
-      })
+
+      if (contactDetails?.goal === 'verify-prescription') {
+        setConnectionRecordId(connectionRecord?.id)
+      } else {
+        navigation.getParent()?.navigate(Stacks.ConnectionStack, {
+          screen: Screens.Connection,
+          params: { connectionId: connectionRecord?.id, outOfBandId: outOfBandRecord.id },
+        })
+      }
     } catch (err: unknown) {
       try {
         // if scanned value is json -> pass into AFJ as is
@@ -232,10 +307,14 @@ const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ route, navigation }) =>
         if (url) {
           const message = await receiveMessageFromUrlRedirect(value, agent)
           setLoading(false)
-          navigation.getParent()?.navigate(Stacks.ConnectionStack, {
-            screen: Screens.Connection,
-            params: { threadId: message['@id'] },
-          })
+          if (contactDetails?.goal) {
+            setRecord(message)
+          } else {
+            navigation.getParent()?.navigate(Stacks.ConnectionStack, {
+              screen: Screens.Connection,
+              params: { threadId: message['@id'] },
+            })
+          }
           return
         }
 
@@ -306,31 +385,33 @@ const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ route, navigation }) =>
         </View>
       </View>
 
-      <View style={styles.buttonContainer}>
-        {contactDetails.isTrusted ? (
-          <>
-            <Button
-              title={'ACCEPT'}
-              buttonType={ButtonType.Primary}
-              accessibilityLabel={'okay'}
-              onPress={handleAccept}
-            />
-          </>
-        ) : (
-          <>
-            <Button
-              title={'ACCEPT ANYWAY'}
-              buttonType={ButtonType.Primary}
-              accessibilityLabel={'okay'}
-              onPress={handleAccept}
-            />
-          </>
-        )}
+      {connectionRecordId ? null : (
+        <View style={styles.buttonContainer}>
+          {contactDetails.isTrusted ? (
+            <>
+              <Button
+                title={'ACCEPT'}
+                buttonType={ButtonType.Primary}
+                accessibilityLabel={'okay'}
+                onPress={handleAccept}
+              />
+            </>
+          ) : (
+            <>
+              <Button
+                title={'ACCEPT ANYWAY'}
+                buttonType={ButtonType.Primary}
+                accessibilityLabel={'okay'}
+                onPress={handleAccept}
+              />
+            </>
+          )}
 
-        <View style={{ height: 15 }} />
+          <View style={{ height: 15 }} />
 
-        <Button title={'DENY'} buttonType={ButtonType.Secondary} accessibilityLabel={'okay'} onPress={handleDeny} />
-      </View>
+          <Button title={'DENY'} buttonType={ButtonType.Secondary} accessibilityLabel={'okay'} onPress={handleDeny} />
+        </View>
+      )}
     </SafeAreaView>
   )
 }

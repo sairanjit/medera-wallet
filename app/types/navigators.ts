@@ -52,6 +52,7 @@ export enum Screens {
   Explore = 'Explore',
   ListPayments = 'List Payments',
   ConnectionInfo = 'Connection Info',
+  SendPayment = 'Send Payment',
 }
 
 export enum Stacks {
@@ -120,6 +121,7 @@ export type ContactStackParams = {
   [Screens.ProofRequestW3C]: { proofId: string }
   [Screens.Home]: undefined
   [Screens.ConnectionInfo]: { invitationURL: string }
+  [Screens.SendPayment]: { accountId: string }
 }
 
 export type ProofRequestsStackParams = {
@@ -151,6 +153,7 @@ export type CredentialStackParams = {
 
 export type PaymentsStackParams = {
   [Screens.ListPayments]: undefined
+  [Screens.SendPayment]: { accountId: string }
 }
 
 export type HomeStackParams = {
